@@ -42,6 +42,29 @@ pip install whisperlivekit
 ```
 > You can also clone the repo and `pip install -e .` for the latest version.
 
+#### Create a Conda environment from source
+
+If you're working from a local checkout and prefer Conda, run the helper script to
+create an environment with all required dependencies:
+
+```bash
+# From the repository root
+./scripts/create_conda_env.sh
+
+# Activate it once the script completes
+conda activate whisperlivekit
+```
+
+Environment variables let you customize the setup, for example:
+
+```bash
+# Use Python 3.11 and install the CUDA 12.1 build of PyTorch
+PYTHON_VERSION=3.11 USE_CUDA=1 CUDA_VERSION=12.1 ./scripts/create_conda_env.sh
+```
+
+Set `INSTALL_SENTENCE_EXTRAS=1` to pull in the optional sentence tokenization
+dependencies (`mosestokenizer` and `wtpsplit`).
+
 #### Quick Start
 1. **Start the transcription server:**
    ```bash
