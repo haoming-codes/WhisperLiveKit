@@ -80,6 +80,17 @@ See  **Parameters & Configuration** below on how to use them.
 
 
 
+### Deploying to Amazon SageMaker
+
+WhisperLiveKit includes a ready-to-use inference script and container definition for SageMaker real-time endpoints that accept the default `audio/webm` payloads produced by the browser client.
+
+- `sagemaker/inference.py` implements the SageMaker model server hooks, forwarding WebM/Opus chunks through FFmpeg before handing them to the transcription pipeline and returning the same JSON structure that the WebSocket server streams.
+- `sagemaker/Dockerfile` wraps the package inside the official PyTorch SageMaker inference image (override the `REGION` build arg to match your AWS region) and installs FFmpeg so the container can transcode WebM audio.
+- `notebooks/deploy_whisperlivekit_sagemaker.ipynb` walks through building/pushing the container to Amazon ECR, provisioning the endpoint, invoking it with `audio/webm`, and cleaning up the resources.
+
+The container keeps FFmpeg enabled so the endpoint can transcode the compressed stream into 16 kHz mono PCM before Whisper processes it.
+
+
 ### Usage Examples
 
 **Command-line Interface**: Start the transcription server with various options:
