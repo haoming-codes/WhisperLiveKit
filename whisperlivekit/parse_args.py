@@ -1,8 +1,9 @@
 
 from argparse import ArgumentParser
 
-def parse_args():
-    parser = ArgumentParser(description="Whisper FastAPI Online Server")
+
+def create_argument_parser(*, add_help: bool = True) -> ArgumentParser:
+    parser = ArgumentParser(description="Whisper FastAPI Online Server", add_help=add_help)
     parser.add_argument(
         "--host",
         type=str,
@@ -311,11 +312,20 @@ def parse_args():
         help="600M or 1.3B",
     )
 
-    args = parser.parse_args()
-    
-    args.transcription = not args.no_transcription
-    args.vad = not args.no_vad    
-    delattr(args, 'no_transcription')
-    delattr(args, 'no_vad')
-    
+    return parser
+
+
+def finalize_parsed_args(args):
+    if hasattr(args, "no_transcription"):
+        args.transcription = not args.no_transcription
+        delattr(args, "no_transcription")
+    if hasattr(args, "no_vad"):
+        args.vad = not args.no_vad
+        delattr(args, "no_vad")
     return args
+
+
+def parse_args(args=None):
+    parser = create_argument_parser()
+    parsed_args = parser.parse_args(args=args)
+    return finalize_parsed_args(parsed_args)
